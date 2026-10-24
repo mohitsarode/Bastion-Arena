@@ -1,0 +1,146 @@
+services:
+  arbiter:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.worker
+    image: bastion-arena-arbiter:latest
+    container_name: bastion_arbiter
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:./infra/docker/seccomp_profile.json
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    ports:
+      - "127.0.0.1:8000:8000"
+    networks:
+      - net_red
+      - net_blue
+      - net_model
+      - net_eval
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+          pids: 100
+    environment:
+      - BASTION_ENV=demo
+      - BASTION_PROVIDERS_MODE=fake
+
+  red_worker:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.worker
+    image: bastion-arena-red:latest
+    container_name: bastion_red_worker
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:./infra/docker/seccomp_profile.json
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    networks:
+      - net_red
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+          pids: 50
+    environment:
+      - ARBITER_URL=http://arbiter:8000
+
+  blue_worker:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.worker
+    image: bastion-arena-blue:latest
+    container_name: bastion_blue_worker
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:./infra/docker/seccomp_profile.json
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    networks:
+      - net_blue
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+          pids: 50
+    environment:
+      - ARBITER_URL=http://arbiter:8000
+
+  model_worker:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.worker
+    image: bastion-arena-model:latest
+    container_name: bastion_model_worker
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:./infra/docker/seccomp_profile.json
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    networks:
+      - net_model
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+          pids: 50
+    environment:
+      - ARBITER_URL=http://arbiter:8000
+
+  evaluator_worker:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.worker
+    image: bastion-arena-evaluator:latest
+    container_name: bastion_evaluator_worker
+    user: "10001:10001"
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+      - seccomp:./infra/docker/seccomp_profile.json
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m
+    networks:
+      - net_eval
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+          pids: 50
+    environment:
+      - ARBITER_URL=http://arbiter:8000
+
+networks:
+  net_red:
+    internal: true
+  net_blue:
+    internal: true
+  net_model:
+    internal: true
+  net_eval:
+    internal: true

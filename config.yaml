@@ -1,0 +1,25 @@
+app:
+  name: bastion-arena
+  environment: demo
+  log_level: INFO
+arena:
+  max_cases_per_round: 25
+  max_prompt_chars: 12000
+  max_model_output_tokens: 512
+  max_concurrent_cases_per_tenant: 2
+  request_timeout_seconds: 45
+providers:
+  mode: fake # fake | ollama | openai_compatible_cloud
+models:
+  red: {base_url: "http://localhost:11434/v1", model: "qwen3:8b", timeout_seconds: 45}
+  blue: {base_url: "http://localhost:11434/v1", model: "qwen3:8b", timeout_seconds: 20}
+  evaluator: {base_url: "http://localhost:11434/v1", model: "qwen3:8b", timeout_seconds: 30}
+  target: {base_url: "http://localhost:11434/v1", model: "qwen3:8b", timeout_seconds: 45}
+feedback:
+  latency_bucket_ms: 250
+  minimum_response_latency_ms: 500
+  expose_evaluator_rationale_to_red: false
+security:
+  require_signed_ledger: true
+  allow_external_targets: false
+  require_tool_gateway: true

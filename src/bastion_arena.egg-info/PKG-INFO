@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: bastion-arena
+Version: 0.1.0
+Summary: Zero-trust adversarial AI safety evaluation framework
+Requires-Python: >=3.11
+Requires-Dist: fastapi<1,>=0.115
+Requires-Dist: uvicorn[standard]<1,>=0.30
+Requires-Dist: pydantic<3,>=2.7
+Requires-Dist: httpx<1,>=0.27
+Requires-Dist: PyYAML<7,>=6
+Requires-Dist: PyNaCl<2,>=1.5
+Provides-Extra: dev
+Requires-Dist: pytest<9,>=8; extra == "dev"
+Requires-Dist: pytest-asyncio<2,>=0.23; extra == "dev"
+Requires-Dist: ruff<1,>=0.6; extra == "dev"
+Requires-Dist: mypy<2,>=1.10; extra == "dev"
